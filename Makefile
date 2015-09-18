@@ -1,6 +1,6 @@
-PREFIX=/usr
+PREFIX=/opt/ejabberd-15.07
 
-EJABBERD_PATH=../ejabberd/
+EJABBERD_PATH=/opt/ejabberd-15.07/
 EJABBERD_SRC_PATH=$(EJABBERD_PATH)src
 
 BEH_BEAMS=gen_restful_api.beam
@@ -29,7 +29,7 @@ all: $(DIST_BEAMS)
 
 ebin/%.beam: src/%.erl
 	@mkdir -p ebin
-	erlc -pa ./ebin $(INCLUDE)  -o ./ebin $<
+	erlc -pa ./ebin $(INCLUDE) -DNO_EXT_LIB -o ./ebin $<
 
 $(TEST_BEAMS): test_ebin/%.beam : tests/%.erl
 	@mkdir -p test_ebin
