@@ -11,6 +11,16 @@ Add it to a HTTP listener, or add a new HTTP listener:
                [{request_handlers, [{["api"], mod_restful}]}]}
              ]}.
 
+Or with YAML:
+
+    listen:
+      -
+        port: 8088
+        ip: "0.0.0.0"
+        module: ejabberd_http
+        request_handlers:
+          "/api": mod_restful
+
 This will open the port 8088 listening on connections only on localhost.
 Requests to http://hostname:8088/api/* will be handled by mod_restful.
 
@@ -41,6 +51,20 @@ here:
            ]}
           ]}.
 
+with YAML:
+
+    mod_restful:
+        api:
+          - path: ["admin"]
+            module: mod_restful_admin
+            params:
+              key: "secret"
+              allowed_commands: [register, unregister]
+          - path: ["register"]
+            module: mod_restful_register
+            params:
+              key: "secret"
+
 This enables two sub paths to two different mod_restful modules:
 mod_restful_admin under http://hostname:8088/api/admin and
 mod_restful_register under http://hostname:8088/api/register.
@@ -63,7 +87,7 @@ To run a command, using admin@localhost:secret as basic authentication.
     Authorization: Basic YWRtaW5AbG9jYWxob3N0OnNlY3JldAo==
     Content-Type: application/json
     Content-Length: 63
-    
+
     {"command":"register","args":["test","example.net","secret"]}
 
 To run a command, using a shared secret key:
@@ -72,7 +96,7 @@ To run a command, using a shared secret key:
     Host: example.net
     Content-Type: application/json
     Content-Length: 78
-    
+
     {"key":"secret","command":"register","args":["test","example.net","secret"]}
 
 When the request is authorized, the result of the command is converted to JSON.
@@ -81,7 +105,7 @@ A reply from the server could look like this:
     HTTP/1.1 200 OK
     Content-Length: 54
     Content-Type: application/json
-     
+
     {"ok":"User test@example.net successfully registered"}
 
 Available options:
@@ -160,7 +184,7 @@ An example session follows:
     Host: example.net
     Content-Type: application/json
     Content-Length: 76
-    
+
     {"key":"secret","username":"test","host":"example.net","password":"secret"]}
 
 If the request was successful, a response looks like this:
@@ -168,7 +192,7 @@ If the request was successful, a response looks like this:
     HTTP/1.1 200 OK
     Content-Length: 4
     Content-Type: application/json
-     
+
     "ok"
 
 GET requests differ in that the parameters are provided in the URL. The
